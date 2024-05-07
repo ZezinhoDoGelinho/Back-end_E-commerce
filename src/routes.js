@@ -20,6 +20,9 @@ const routes = new Router()
 routes.post('/users', UserController.store)
 //Login
 routes.post('/sessions', SessionController.store)
+//Recuperar senha
+routes.post('/recover-password', SessionController.recoverPassword)
+routes.post('/redefine-password', SessionController.redefinePassword)
 
 routes.use(authMiddleware)
 
