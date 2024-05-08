@@ -3,7 +3,7 @@
 import * as Yup from 'yup' 
 import Product from '../models/Product'
 import Order from '../schemas/Order'
-import User from '../models/User'
+import Admin from '../models/Admin'
 
 class OrderController {
     async store(request,response){
@@ -86,11 +86,8 @@ class OrderController {
             return response.status(400).json({ error: err.errors}) 
         }
 
-        const { admin: isAdmin} = await User.findByPk(request.userId)
-
-        if(!isAdmin){
-            return response.status(401).json()
-        }
+        const permission = await Admin.findByPk(request.userId)
+        if(!permission){ return response.status(401).json({error: "Você não tem autorização para fazer essa operação!"})}
 
         const { id } = request.params 
         const { status } = request.body 

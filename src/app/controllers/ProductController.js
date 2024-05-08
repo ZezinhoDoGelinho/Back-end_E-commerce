@@ -1,7 +1,7 @@
 import * as Yup from 'yup'
 import Product from '../models/Product'
 import Category from '../models/Category'
-import User from '../models/User'
+import Admin from '../models/Admin'
 
 import fs from 'fs'
 
@@ -35,11 +35,8 @@ class ProductController {
           return response.status(400).json({ error: err.errors });
         }
       
-        const { admin: isAdmin } = await User.findByPk(request.userId);
-      
-        if (!isAdmin) {
-          return response.status(401).json();
-        }
+        const permission = await Admin.findByPk(request.userId)
+        if(!permission){ return response.status(401).json({error: "Você não tem autorização para fazer essa operação!"})}
       
         if (!request.files || request.files.length === 0) {
           return response.status(400).json({ error: 'Nenhuma imagem enviada.' });
@@ -98,11 +95,8 @@ class ProductController {
             return response.status(400).json({ error: err.errors })
         }
 
-        const { admin: isAdmin } = await User.findByPk(request.userId)
-
-        if(!isAdmin){
-            return response.status(401).json()
-        }
+        const permission = await Admin.findByPk(request.userId)
+        if(!permission){ return response.status(401).json({error: "Você não tem autorização para fazer essa operação!"})}
 
         const { id } = request.params
 
@@ -142,11 +136,8 @@ class ProductController {
         const { id } = request.params
         const product = await Product.findByPk(id)
 
-        const { admin: isAdmin } = await User.findByPk(request.userId)
-
-        if(!isAdmin){
-            return response.status(401).json()
-        }
+        const permission = await Admin.findByPk(request.userId)
+        if(!permission){ return response.status(401).json({error: "Você não tem autorização para fazer essa operação!"})}
         
         if (product) {
             const {images: oldImages} = product 

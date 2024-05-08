@@ -9,6 +9,7 @@ import CategoryController from './app/controllers/CategoryController'
 import OrderController from "./app/controllers/OrderController"
 
 import authMiddleware from './app/middlewares/auth'
+import AdminController from "./app/controllers/AdminController"
 
 
 const produto = multer(product)
@@ -25,6 +26,9 @@ routes.post('/recover-password', SessionController.recoverPassword)
 routes.post('/redefine-password', SessionController.redefinePassword)
 
 routes.use(authMiddleware)
+//Admin
+routes.post('/admin', AdminController.register)
+routes.delete('/admin', AdminController.delete)
 
 //Produto
 routes.post('/products', produto.array('images'), ProductController.store) 

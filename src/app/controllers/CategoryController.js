@@ -1,6 +1,6 @@
 import * as Yup from 'yup'
 import Category from '../models/Category'
-import User from '../models/User'
+import Admin from '../models/Admin'
 
 import fs from 'fs'
 
@@ -28,21 +28,18 @@ class CategoryController{
             return response.status(400).json({ error: err.errors })
         }
 
-        const { admin: isAdmin } = await User.findByPk(request.userId)
-
-        if(!isAdmin){
-            return response.status(401).json()
-        }
+        const permission = await Admin.findByPk(request.userId)
+        if(!permission){ return response.status(401).json({error: "Você não tem autorização para fazer essa operação!"})}
 
         const { name } = request.body
         const { filename: path } = request.file
 
         const categoryExists = await Category.findOne({
-            where: {name,},
+            where: { name },
         })
 
         if(categoryExists){
-            return response.status(400).json({ error: 'Category already exists'})
+            return response.status(400).json({ error: 'Categoria já existe!'})
         }
 
         const { id } = await Category.create({ name, path })
@@ -66,16 +63,15 @@ class CategoryController{
             return response.status(400).json({ error: err.errors })
         }
 
-        const { admin: isAdmin } = await User.findByPk(request.userId)
-
-        if(!isAdmin){ return response.status(401).json()}
+        const permission = await Admin.findByPk(request.userId)
+        if(!permission){ return response.status(401).json({error: "Você não tem autorização para fazer essa operação!"})}
 
         const { name } = request.body
         const { id } = request.params
 
         const category = await Category.findByPk(id)
 
-        if(!category){ return response.status(401).json({ error: "Make sure your category id is correct"})}
+        if(!category){ return response.status(401).json({ error: "Categoria não encontrada!"})}
 
         let path
         if(request.file){
@@ -94,20 +90,17 @@ class CategoryController{
         const { id } = request.params
         const category = await Category.findByPk(id)
 
-        const { admin: isAdmin } = await User.findByPk(request.userId)
-
-        if(!isAdmin){
-            return response.status(401).json()
-        }
+        const permission = await Admin.findByPk(request.userId)
+        if(!permission){ return response.status(401).json({error: "Você não tem autorização para fazer essa operação!"})}
         
         if (category) {
             const {path: foto} = category
             DeleteOldImages(foto)
             
             await category.destroy();
-            return response.status(204).json({ message: 'Categoria deletado com sucesso!'});
+            return response.status(204).json({ message: 'Categoria deletada com sucesso!'});
         } else {
-            return response.status(404).json({ message: 'Categoria não encontrado.'});
+            return response.status(404).json({ message: 'Categoria não encontrada!'});
         }
     }
 }

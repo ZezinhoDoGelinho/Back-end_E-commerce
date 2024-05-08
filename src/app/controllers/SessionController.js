@@ -4,9 +4,6 @@ import authConfig from '../../config/auth'
 import User from '../models/User'
 import crypto from 'crypto'
 import mailer from '../../modules/mailer'
-import { error } from 'console'
-
-
 class SessionController {
     async store(request,response){
         const schema = Yup.object().shape({
@@ -14,17 +11,13 @@ class SessionController {
             password: Yup.string().required(),
         })
 
-        const useEmailOrPasswordIncorrect = () => {
-            return response.status(400).json({ message:'Make sure your password or email are correct' })
-        }
-
         try{
             await schema.validateSync(request.body, { abortEarly: false})
         }catch(err){
             return response.status(400).json({error: err.errors})
         }
 
-        if(!(schema.isValid(request.body))) { useEmailOrPasswordIncorrect() }
+        if(!(schema.isValid(request.body))) { return response.status(400).json({ message:'Make sure your password or email are correct' }) }
 
         const { email, password } = request.body
 
@@ -32,16 +25,15 @@ class SessionController {
             where: {email},
         })
 
-        if(!user){ useEmailOrPasswordIncorrect() }
+        if(!user){ return response.status(400).json({ message:'Make sure your password or email are correct' }) }
 
-        if(!(await user.checkPassword(password))){ useEmailOrPasswordIncorrect() }
+        if(!(await user.checkPassword(password))){ return response.status(400).json({ message:'Make sure your password or email are correct' }) }
 
         try{
             return response.json({
                 id: user.id,
                 email,
                 name: user.name,
-                admin: user.admin,
                 token: jwt.sign(
                     {id: user.id, name: user.name }, 
                     authConfig.secret, { expiresIn: authConfig.expiresIn,}
@@ -77,6 +69,7 @@ class SessionController {
         const token = crypto.randomBytes(20).toString('hex')
         //criando expiração do token
         const now = new Date()
+
         now.setHours(now.getHours() + 1)
 
         await user.update(
@@ -85,7 +78,7 @@ class SessionController {
                 password_reset_expires: now,
             }
         )
-
+        
         mailer.sendMail({
             to: email,
             from: 'paulovitor@teste.com',
