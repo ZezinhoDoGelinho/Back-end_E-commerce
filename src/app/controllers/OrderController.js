@@ -61,7 +61,7 @@ class OrderController {
                 name: request.userName,
             },
             products: editedProduct,
-            status: 'Pedido realizado',
+            status: 'Order placed',
         }
 
         const orderResponse = await Order.create(order)
@@ -87,7 +87,7 @@ class OrderController {
         }
 
         const permission = await Admin.findByPk(request.userId)
-        if(!permission){ return response.status(401).json({error: "Você não tem autorização para fazer essa operação!"})}
+        if(!permission){ return response.status(401).json({error: "You are not authorized to perform this operation!"})}
 
         const { id } = request.params 
         const { status } = request.body 
@@ -98,7 +98,7 @@ class OrderController {
             return response.status(400).json({ error: error.message })
         }
 
-        return response.json({ message: 'Status atualizado com sucesso!'})
+        return response.json({ message: 'Status updated successfully!'})
     }
 }
 

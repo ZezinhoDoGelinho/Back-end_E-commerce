@@ -17,17 +17,17 @@ class AdminController {
             return response.status(400).json({ error: err.errors}) 
         }
         const permission = await Admin.findByPk(request.userId)
-        if(!permission){ return response.status(401).json({error: "Você não tem autorização para fazer essa operação!"})}
+        if(!permission){ return response.status(401).json({error: "You are not authorized to perform this operation!"})}
         
         const { id } = request.body
 
         const adminExist = await Admin.findByPk(id)
         if(adminExist){
-            return response.status(409).json({ error: 'Admin já está registrado!' })
+            return response.status(409).json({ error: 'Admin is already registered!' })
         }
 
         const user = await User.findByPk(id)
-        if(!user){ return response.status(400).json({message: "Usuario não encontrado!"})}
+        if(!user){ return response.status(400).json({message: "User not found!"})}
         
         const newAdmin = await Admin.create({
             id: user.id,
@@ -48,17 +48,17 @@ class AdminController {
             return response.status(400).json({ error: err.errors}) 
         }
         const permission = await Admin.findByPk(request.userId)
-        if(!permission){ return response.status(401).json({error: "Você não tem autorização para fazer essa operação!"})}
+        if(!permission){ return response.status(401).json({error: "You are not authorized to perform this operation!"})}
         
         const { id } = request.body
 
         const adminExist = await Admin.findByPk(id)
         if(!adminExist){
-            return response.status(401).json({ error: 'Admin não encontrado!' })
+            return response.status(401).json({ error: 'Admin not found!' })
         }
 
         await adminExist.destroy()
-        return response.status(201).json( {message:'Admin removido!'})
+        return response.status(201).json( {message:'Admin removed!'})
     }
 }
 

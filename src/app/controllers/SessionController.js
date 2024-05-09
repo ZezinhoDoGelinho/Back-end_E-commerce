@@ -62,7 +62,7 @@ class SessionController {
         })
         
         if(!user){
-            return response.status(409).json({ error: 'Usuário não encontrado' })
+            return response.status(409).json({ error: 'User not found' })
         }
 
         //Gerar token
@@ -81,18 +81,16 @@ class SessionController {
         
         mailer.sendMail({
             to: email,
-            from: 'paulovitor@teste.com',
+            from: 'API@teste.com',
             template: 'auth/forgot_password',
             context: { token },
         }, (err)=> {
             if (err) {
-                console.error('Erro ao enviar email:', err);
-            } else {
-                console.log('Email enviado com sucesso!');
+                return response.status(400).json({error: 'Error sending email:', err});
             }
         })
 
-        return response.status(200).json({ message: 'Requisição feita com sucesso!'})
+        return response.status(200).json({ message: 'We will send the recovery code to your email!'})
     }
     async redefinePassword(request,response){
         const schema = Yup.object().shape({
@@ -115,23 +113,23 @@ class SessionController {
             })
 
             if(!user){
-                return response.status(409).json({ error: 'Usuário não encontrado' })
+                return response.status(409).json({ error: 'User not found' })
             }
 
             if(token !== user.password_reset_token){
-                return response.status(400).json({ error: 'Token invalido!'})
+                return response.status(400).json({ error: 'Invalid token!'})
             }
 
             const now = new Date()
             if(now > user.password_reset_expires){
-                return response.status(400).json({ error: 'Token expirado, solicite um novo!'})
+                return response.status(400).json({ error: 'Token expired, request a new one!'})
             }
 
             user.password = password
             user.password_reset_expires = null
             user.password_reset_token = null
             await user.save()
-            return response.status(200).json({message: 'Senha atualizada com sucesso!'})
+            return response.status(200).json({message: 'Password updated successfully!'})
 
         }catch(err){
             return response.status(400).json({error: err.error})

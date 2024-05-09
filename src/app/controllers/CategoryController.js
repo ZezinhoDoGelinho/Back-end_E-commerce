@@ -29,7 +29,7 @@ class CategoryController{
         }
 
         const permission = await Admin.findByPk(request.userId)
-        if(!permission){ return response.status(401).json({error: "Você não tem autorização para fazer essa operação!"})}
+        if(!permission){ return response.status(401).json({error: "You are not authorized to perform this operation!"})}
 
         const { name } = request.body
         const { filename: path } = request.file
@@ -39,7 +39,7 @@ class CategoryController{
         })
 
         if(categoryExists){
-            return response.status(400).json({ error: 'Categoria já existe!'})
+            return response.status(400).json({ error: 'Category already exists!'})
         }
 
         const { id } = await Category.create({ name, path })
@@ -64,14 +64,14 @@ class CategoryController{
         }
 
         const permission = await Admin.findByPk(request.userId)
-        if(!permission){ return response.status(401).json({error: "Você não tem autorização para fazer essa operação!"})}
+        if(!permission){ return response.status(401).json({error: "You are not authorized to perform this operation!"})}
 
         const { name } = request.body
         const { id } = request.params
 
         const category = await Category.findByPk(id)
 
-        if(!category){ return response.status(401).json({ error: "Categoria não encontrada!"})}
+        if(!category){ return response.status(401).json({ error: "Category not found!"})}
 
         let path
         if(request.file){
@@ -91,16 +91,16 @@ class CategoryController{
         const category = await Category.findByPk(id)
 
         const permission = await Admin.findByPk(request.userId)
-        if(!permission){ return response.status(401).json({error: "Você não tem autorização para fazer essa operação!"})}
+        if(!permission){ return response.status(401).json({error: "You are not authorized to perform this operation!"})}
         
         if (category) {
             const {path: foto} = category
             DeleteOldImages(foto)
             
             await category.destroy();
-            return response.status(204).json({ message: 'Categoria deletada com sucesso!'});
+            return response.status(204).json({ message: 'Category deleted successfully!'});
         } else {
-            return response.status(404).json({ message: 'Categoria não encontrada!'});
+            return response.status(404).json({ message: 'Category not found!'});
         }
     }
 }

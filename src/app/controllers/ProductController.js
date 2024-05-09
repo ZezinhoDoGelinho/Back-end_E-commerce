@@ -36,10 +36,10 @@ class ProductController {
         }
       
         const permission = await Admin.findByPk(request.userId)
-        if(!permission){ return response.status(401).json({error: "Você não tem autorização para fazer essa operação!"})}
+        if(!permission){ return response.status(401).json({error: "You are not authorized to perform this operation!"})}
       
         if (!request.files || request.files.length === 0) {
-          return response.status(400).json({ error: 'Nenhuma imagem enviada.' });
+          return response.status(400).json({ error: 'No images sent.' });
         }
 
         const filenames = request.files.map(file => file.filename);
@@ -61,7 +61,7 @@ class ProductController {
       
           return response.json(product);
         } catch (err) {
-          return response.status(500).json({ error: 'Erro ao criar o produto.' });
+          return response.status(500).json({ error: 'Error creating product.' });
         }
     }
       
@@ -96,7 +96,7 @@ class ProductController {
         }
 
         const permission = await Admin.findByPk(request.userId)
-        if(!permission){ return response.status(401).json({error: "Você não tem autorização para fazer essa operação!"})}
+        if(!permission){ return response.status(401).json({error: "You are not authorized to perform this operation!"})}
 
         const { id } = request.params
 
@@ -107,7 +107,7 @@ class ProductController {
         })
 
         if(!product){
-            return response.status(401).json({ error: "Verifique se o ID do seu produto está correto"})
+            return response.status(401).json({ error: "Check that your product ID is correct"})
         }
         
         let filenames
@@ -137,16 +137,16 @@ class ProductController {
         const product = await Product.findByPk(id)
 
         const permission = await Admin.findByPk(request.userId)
-        if(!permission){ return response.status(401).json({error: "Você não tem autorização para fazer essa operação!"})}
+        if(!permission){ return response.status(401).json({error: "You are not authorized to perform this operation!"})}
         
         if (product) {
             const {images: oldImages} = product 
             oldImages.map(img => DeleteOldImages(img))
             
             await product.destroy();
-            return response.status(204).json({ message: 'Produto deletado com sucesso!'});
+            return response.status(204).json({ message: 'Product deleted successfully!'});
         } else {
-            return response.status(404).json({ message: 'Produto não encontrado.'});
+            return response.status(404).json({ message: 'Product not found.'});
         }
     }
 }
