@@ -96,7 +96,7 @@ Responsavel pelo projeto
 <table>
   <tr>
     <td align="center">
-      <a href="#">
+      <a href="https://github.com/ZezinhoDoGelinho">
         <img src="https://avatars.githubusercontent.com/u/122682835?v=4" width="100px;" alt="Paulo Vitor Profile Picture"/><br>
         <sub>
           <b>Paulo Vitor</b>
