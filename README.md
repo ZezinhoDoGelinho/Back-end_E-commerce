@@ -33,7 +33,9 @@ Você precisará ter em sua maquina:
 - [NodeJS](https://github.com/)
 - [Docker](https://www.docker.com/)
 
-<h3>Cloning</h3>
+<h3>Digite no terminal</h3>
+
+<h4>Para clonar o repositorio</h4>
 
 ```bash
 git clone ZezinhoDoGelinho/Back-end_E-commerce
@@ -43,6 +45,14 @@ git clone ZezinhoDoGelinho/Back-end_E-commerce
 
 ```bash
 yarn
+```
+<h4>Baixe as imagens do PostgreSQL e do MongoDB</h4>
+
+```bash
+docker pull postgres
+```
+```bash
+docker pull mongo
 ```
 
 <h4>Crie um um container Docker para o postgreSQL</h4>
@@ -55,6 +65,19 @@ docker run --name postgres -e POSTGRES_PASSWORD=roupas -p 5432:5432 -d postgres
 
 ```bash
 docker run --name carrinho-mongoDB -p 27017:27017 -d -t mongo
+```
+
+<h3>Configure o sistema de envio de emails</h3>
+<h4>altere as configurações do arquivo "src/app/nodemailer/config/mail.json"</h4>
+
+```bash
+{
+    "service": "gmail",
+    "host": " smtp.gmail.com",
+    "port": 587,
+    "user": "SeuEmail@gmail.com", 
+    "pass": "SuaSenhaDeAppDoGmail"
+}
 ```
 
 <h3>Starting</h3>
