@@ -3,7 +3,8 @@ import jwt from 'jsonwebtoken'
 import authConfig from '../../config/auth'
 import User from '../models/User'
 import crypto from 'crypto'
-import mailer from '../../modules/mailer'
+import mailer from '../nodemailer/modules/mailer'
+import { user } from '../nodemailer/config/mail.json'
 class SessionController {
     async store(request,response){
         const schema = Yup.object().shape({
@@ -25,9 +26,9 @@ class SessionController {
             where: {email},
         })
 
-        if(!user){ return response.status(400).json({ message:'Make sure your password or email are correct' }) }
+        if(!user){ return response.status(400).json({ message:'Usuario não encontrado' }) }
 
-        if(!(await user.checkPassword(password))){ return response.status(400).json({ message:'Make sure your password or email are correct' }) }
+        if(!(await user.checkPassword(password))){ return response.status(400).json({ message:'Email ou senha não ' }) }
 
         try{
             return response.json({
@@ -78,19 +79,18 @@ class SessionController {
                 password_reset_expires: now,
             }
         )
+        try{
+            mailer.sendMail({
+                  to: email,
+                  from: user, // Esse user é o remetente
+                  template: 'auth/forgot_password',
+                  context: { token },
+                });
+            return response.status(200).json({ message: 'Enviaremos o código de recuperação para seu e-mail!'})
+        }catch(err){
+            return response.status(400).json({ error: 'Erro ao enviar e-mail', details: err });
+        }
         
-        mailer.sendMail({
-            to: email,
-            from: 'API@teste.com',
-            template: 'auth/forgot_password',
-            context: { token },
-        }, (err)=> {
-            if (err) {
-                return response.status(400).json({error: 'Error sending email:', err});
-            }
-        })
-
-        return response.status(200).json({ message: 'We will send the recovery code to your email!'})
     }
     async redefinePassword(request,response){
         const schema = Yup.object().shape({

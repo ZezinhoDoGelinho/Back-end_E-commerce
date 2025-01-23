@@ -1,0 +1,7 @@
+{
+    "service": "gmail",
+    "host": " smtp.gmail.com",
+    "port": 587,
+    "user": "SeuEmail@gmail.com", 
+    "pass": "SuaSenhaDeAppDoGmail"
+}
