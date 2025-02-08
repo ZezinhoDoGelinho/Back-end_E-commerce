@@ -1,13 +1,16 @@
 import path from 'path'
 import nodemailer from 'nodemailer'
 import hbs from 'nodemailer-express-handlebars'
-import { host, port, user, pass, service } from "../config/mail.json"
+import { email, senha_de_aplicativo_do_email } from "../../../dados.json"
 
 const transport = nodemailer.createTransport({
-    service,
-    host, 
-    port, 
-    auth: { user, pass }
+    service: "gmail",
+    host: " smtp.gmail.com", 
+    port: 587, 
+    auth: {
+        user: email, 
+        pass : senha_de_aplicativo_do_email
+    }
 });
 
 transport.use('compile', hbs({

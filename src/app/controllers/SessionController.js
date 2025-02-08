@@ -4,7 +4,6 @@ import authConfig from '../../config/auth'
 import User from '../models/User'
 import crypto from 'crypto'
 import mailer from '../nodemailer/modules/mailer'
-import { user } from '../nodemailer/config/mail.json'
 class SessionController {
     async store(request,response){
         const schema = Yup.object().shape({

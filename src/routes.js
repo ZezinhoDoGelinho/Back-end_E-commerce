@@ -6,7 +6,8 @@ import UserController from "./app/controllers/UserController"
 import SessionController from "./app/controllers/SessionController"
 import ProductController from './app/controllers/ProductController'
 import CategoryController from './app/controllers/CategoryController'
-import OrderController from "./app/controllers/OrderController"
+import PedidoController from "./app/controllers/PedidoController"
+import Pagamento from "./app/controllers/Pagamento"
 
 import authMiddleware from './app/middlewares/auth'
 import AdminController from "./app/controllers/AdminController"
@@ -43,8 +44,12 @@ routes.put('/categories/:id', categoria.single('images'), CategoryController.upd
 routes.delete('/categories/:id', CategoryController.delete)
 
 //Pedidos
-routes.post('/orders', OrderController.store)
-routes.get('/orders', OrderController.index)
-routes.put('/orders/:id', OrderController.update)
+routes.post('/orders', PedidoController.criarPedido)
+routes.get('/orders', PedidoController.todosOsPedidos)
+routes.put('/orders/:id', PedidoController.update)
+
+//Pagamento
+routes.post('/pagamento', Pagamento.GerarPagamento)
+
 
 export default routes

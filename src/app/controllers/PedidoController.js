@@ -6,10 +6,10 @@ import Order from '../schemas/Order'
 import Admin from '../models/Admin'
 
 class OrderController {
-    async store(request,response){
+    async criarPedido(request,response){
         const schema = Yup.object().shape({
             products: Yup.array()
-            .required()
+            .required().min(1)
             .of(
                 Yup.object().shape({
                     id: Yup.number().required(),
@@ -35,12 +35,12 @@ class OrderController {
         })
 
         const editedProduct = updatedProducts.map( product =>{
-            //get the product index
+            //obter o índice do produto
             const productIndex = request.body.products.findIndex( 
                 requestProduct => requestProduct.id === product.id
             )
 
-            //formatting product
+            //formatação de produto
             const newProduct ={
                 id: product.id,
                 name: product.name,
@@ -54,14 +54,14 @@ class OrderController {
             return newProduct
         })
         
-        //final product format
+        //formato final do produto
         const order = {
             user: {
                 id: request.userId,
                 name: request.userName,
             },
             products: editedProduct,
-            status: 'Order placed',
+            status: 'Aguardando pagamento',
         }
 
         const orderResponse = await Order.create(order)
@@ -69,7 +69,7 @@ class OrderController {
         return response.status(201).json(orderResponse)
     }
 
-    async index(request, response){
+    async todosOsPedidos(request, response){
         const orders = await Order.find()
 
         return response.json(orders)
@@ -87,7 +87,7 @@ class OrderController {
         }
 
         const permission = await Admin.findByPk(request.userId)
-        if(!permission){ return response.status(401).json({error: "You are not authorized to perform this operation!"})}
+        if(!permission){ return response.status(401).json({error: "Você não está autorizado a realizar esta operação!"})}
 
         const { id } = request.params 
         const { status } = request.body 
@@ -98,7 +98,7 @@ class OrderController {
             return response.status(400).json({ error: error.message })
         }
 
-        return response.json({ message: 'Status updated successfully!'})
+        return response.json({ message: 'Status atualizado com sucesso!'})
     }
 }
 
