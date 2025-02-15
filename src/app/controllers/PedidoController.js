@@ -8,6 +8,7 @@ import Admin from '../models/Admin'
 class OrderController {
     async criarPedido(request,response){
         const schema = Yup.object().shape({
+            payment: Yup.string().required(),
             products: Yup.array()
             .required().min(1)
             .of(
@@ -60,6 +61,7 @@ class OrderController {
                 id: request.userId,
                 name: request.userName,
             },
+            payment: request.body.payment,
             products: editedProduct,
             status: 'Aguardando pagamento',
         }
