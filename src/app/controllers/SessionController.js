@@ -5,7 +5,7 @@ import User from '../models/User'
 import crypto from 'crypto'
 import mailer from '../nodemailer/modules/mailer'
 class SessionController {
-    async store(request,response){
+    async login(request,response){
         const schema = Yup.object().shape({
             email: Yup.string().email().required(),
             password: Yup.string().required(),
@@ -17,7 +17,7 @@ class SessionController {
             return response.status(400).json({error: err.errors})
         }
 
-        if(!(schema.isValid(request.body))) { return response.status(400).json({ message:'Make sure your password or email are correct' }) }
+        if(!(schema.isValid(request.body))) { return response.status(400).json({ message:'Certifique-se de que sua senha ou e-mail estejam corretos' }) }
 
         const { email, password } = request.body
 
@@ -31,9 +31,6 @@ class SessionController {
 
         try{
             return response.json({
-                id: user.id,
-                email,
-                name: user.name,
                 token: jwt.sign(
                     {id: user.id, name: user.name }, 
                     authConfig.secret, { expiresIn: authConfig.expiresIn,}

@@ -5,7 +5,7 @@ import Order from '../schemas/Order';
 import { token_do_mercado_pago } from "../../dados.json"
 
 class PagamentoController {
-    async GerarPagamento(request, response) {
+    async gerarPagamento(request, response) {
         try {
 
             //const {formaDePagamento} = request.body

@@ -20,15 +20,15 @@ module.exports = {
       },
       telephone: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       cep: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       address: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       password_hash: {
         type: Sequelize.STRING,

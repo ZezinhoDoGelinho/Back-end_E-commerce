@@ -19,9 +19,9 @@ const categoria = multer(category)
 const routes = new Router()
 
 //Cadastro
-routes.post('/users', UserController.store)
+routes.post('/users', UserController.CreateAccount)
 //Login
-routes.post('/sessions', SessionController.store)
+routes.post('/sessions', SessionController.login)
 //Recuperar senha
 routes.post('/recover-password', SessionController.recoverPassword)
 routes.post('/redefine-password', SessionController.redefinePassword)
@@ -32,7 +32,7 @@ routes.post('/admin', AdminController.register)
 routes.delete('/admin', AdminController.delete)
 
 //Produto
-routes.post('/products', produto.array('images'), ProductController.store) 
+routes.post('/products', produto.array('images'), ProductController.createProduct) 
 routes.get('/products', ProductController.index) 
 routes.put('/products/:id', produto.array('images'), ProductController.update) 
 routes.delete('/products/:id',  ProductController.delete) 
@@ -49,7 +49,7 @@ routes.get('/orders', PedidoController.todosOsPedidos)
 routes.put('/orders/:id', PedidoController.update)
 
 //Pagamento
-routes.post('/pagamento', Pagamento.GerarPagamento)
+routes.post('/pagamento', Pagamento.gerarPagamento)
 
 
 export default routes

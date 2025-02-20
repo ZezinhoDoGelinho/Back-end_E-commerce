@@ -1,16 +1,15 @@
 import { v4 } from 'uuid'
 import User from '../models/User'
+import jwt from 'jsonwebtoken'
+import authConfig from '../../config/auth'
 
 import * as Yup from 'yup' 
 
 class UserController {
-    async store(request,response){
+    async CreateAccount(request,response){
         const schema = Yup.object().shape({
             name: Yup.string().required(), 
             email: Yup.string().email().required(),
-            telephone: Yup.string().required(),
-            cep: Yup.string().required(),
-            address: Yup.string().required(),
             password: Yup.string().required().min(6),
         })
 
@@ -20,27 +19,28 @@ class UserController {
             return response.status(400).json({ error: err.errors}) 
         }
         
-        const { name, email, telephone, cep, address, password } = request.body
+        const { name, email, password } = request.body
 
         const userExist = await User.findOne({
             where: { email },
         })
         
         if(userExist){
-            return response.status(409).json({ error: 'User already exists' })
+            return response.status(409).json({ error: 'O usuário já existe' })
         }
 
         const user = await User.create({
             id: v4(),
             name,
             email,
-            telephone,
-            cep,
-            address,
             password
         })
         
-        return response.status(201).json({id: user.id, name, email})
+        return response.status(201).json({
+            token: jwt.sign(
+            {id: user.id, name: user.name }, 
+            authConfig.secret, { expiresIn: authConfig.expiresIn,}
+        )})
     }
 }
 
