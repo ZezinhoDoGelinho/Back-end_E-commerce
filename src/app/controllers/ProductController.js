@@ -28,7 +28,7 @@ class ProductController {
           color: Yup.array().of(Yup.string().required()).required(),
           categories: Yup.array().of(Yup.number().required()).required(),
           supplier: Yup.string().required(),
-          offerValue: Yup.number(),
+          percentageOfOffer: Yup.number(),
           purchasePrice: Yup.number().required(),
           dateOfPurchase: Yup.date(),
         });
@@ -48,11 +48,15 @@ class ProductController {
 
         const filenames = request.files.map(file => file.filename);
       
-        const { 
+        let { 
             name, size, color, description, 
             price, categories, offer, dateOfPurchase, 
-            purchasePrice, supplier, offerValue 
+            purchasePrice, supplier, percentageOfOffer 
         } = request.body;
+
+        if(offer){
+            price = price - (price * (percentageOfOffer / 100));
+        }
       
         try {
           const product = await Product.create({
@@ -64,7 +68,7 @@ class ProductController {
             dateOfPurchase,
             purchasePrice,
             supplier,
-            offerValue,
+            percentageOfOffer,
             images: [...filenames],
             offer,
           });
@@ -100,7 +104,7 @@ class ProductController {
             color: Yup.array().of(Yup.string()),
             categories: Yup.array().of(Yup.string()),
             supplier: Yup.string(),
-            offerValue: Yup.number(),
+            percentageOfOffer: Yup.number(),
             purchasePrice: Yup.number(),
             dateOfPurchase: Yup.date(),
         })
@@ -134,14 +138,18 @@ class ProductController {
             filenames = product.images.map(name => name)
         }
 
-        const { 
+        let { 
             name, size, color, description, 
             price, categories, offer, dateOfPurchase, 
-            purchasePrice, supplier, offerValue 
+            purchasePrice, supplier, percentageOfOffer 
         } = request.body;
 
+        if(offer){
+            price = price - (price * (percentageOfOffer / 100));
+        }
+
         await Product.update(
-            { name, size, color, description, price,dateOfPurchase, purchasePrice, supplier, offerValue, images: [...filenames], offer,}, { where: { id }}
+            { name, size, color, description, price, dateOfPurchase, purchasePrice, supplier, percentageOfOffer, images: [...filenames], offer,}, { where: { id }}
         )
 
         if(categories.length > 0){

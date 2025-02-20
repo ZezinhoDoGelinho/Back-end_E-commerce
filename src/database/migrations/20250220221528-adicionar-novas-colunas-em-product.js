@@ -8,8 +8,8 @@ module.exports = {
       allowNull: true,
     })
 
-    await queryInterface.addColumn('products', 'offerValue', {
-      type: Sequelize.FLOAT,
+    await queryInterface.addColumn('products', 'percentageOfOffer', {
+      type: Sequelize.INTEGER,
       allowNull: true,
     })
     
